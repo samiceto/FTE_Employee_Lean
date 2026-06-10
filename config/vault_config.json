@@ -1,0 +1,27 @@
+{
+  "vault_path": "/mnt/d/FTE_Employee/hackathon_zero/ai_employee_vault",
+  "folders": {
+    "inbox": "Inbox",
+    "needs_action": "Need_Action",
+    "pending_approval": "Pending_Approval",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "done": "Done",
+    "plans": "Plans",
+    "logs": "Logs",
+    "accounting": "Accounting",
+    "briefings": "Briefings"
+  },
+  "subfolders": {
+    "inbox": {
+      "gmail": "gmail",
+      "whatsapp": "whatsapp",
+      "linkedin": "linkedin"
+    },
+    "needs_action": {
+      "email_replies": "email_replies",
+      "social_posts": "social_posts",
+      "business_tasks": "business_tasks"
+    }
+  }
+}

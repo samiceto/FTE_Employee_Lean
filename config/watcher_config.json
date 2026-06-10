@@ -1,0 +1,31 @@
+{
+  "watchers": {
+    "gmail": {
+      "enabled": true,
+      "polling_interval": 30,
+      "credentials_path": "src/watchers/gmail_credentials.json",
+      "inbox_path": "ai_employee_vault/Inbox/gmail/",
+      "need_action_path": "ai_employee_vault/Need_Action/email_replies/"
+    },
+    "whatsapp": {
+      "enabled": true,
+      "polling_interval": 15,
+      "session_path": "src/watchers/whatsapp_session",
+      "inbox_path": "ai_employee_vault/Inbox/whatsapp/",
+      "need_action_path": "ai_employee_vault/Need_Action/business_tasks/"
+    },
+    "linkedin": {
+      "enabled": true,
+      "polling_interval": 60,
+      "credentials_path": "src/watchers/linkedin_user_data",
+      "inbox_path": "ai_employee_vault/Inbox/linkedin/",
+      "need_action_path": "ai_employee_vault/Need_Action/social_posts/"
+    }
+  },
+  "global_settings": {
+    "log_level": "INFO",
+    "log_file": "logs/watcher.log",
+    "error_retry_attempts": 3,
+    "error_retry_delay": 5
+  }
+}

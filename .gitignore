@@ -1,0 +1,39 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets — never commit these
+.env
+.env.*
+token.json
+*_token.json
+credentials.json
+*_credentials.json
+client_secret*.json
+
+# Local-only secrets restore guide — NEVER push this (contains real keys/passwords)
+LOCAL_SECRETS_DO_NOT_COMMIT.md
+gmail_credentials.json
+
+# WhatsApp & browser sessions (local only)
+whatsapp_session/
+*_user_data/
+
+# Logs (large, generated)
+logs/*.log
+
+# Vault — keep folder STRUCTURE only, never commit real scraped data (emails, messages, etc.)
+ai_employee_vault/**
+!ai_employee_vault/**/
+!ai_employee_vault/**/.gitkeep
+ai_employee_vault/.obsidian/
+
+# Test artifacts
+.pytest_cache/

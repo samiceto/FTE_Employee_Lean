@@ -1,0 +1,13 @@
+{
+  "lsp": {
+    "pyright": {
+      "settings": {
+        "python": {
+          "pythonPath": "D:\\FTE_Employee\\hackathon_zero\\.venv\\Scripts\\python.exe",
+          "venvPath": "D:\\FTE_Employee\\hackathon_zero",
+          "venv": ".venv"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "servers": [
+    {
+      "name": "email",
+      "command": "python",
+      "args": ["/mnt/d/FTE_Employee/hackathon_zero/src/mcp_servers/email/mcp_server_email.py"],
+      "env": {
+        "GMAIL_CREDENTIALS": "/mnt/d/FTE_Employee/hackathon_zero/src/watchers/gmail_credentials.json"
+      }
+    },
+    {
+      "name": "social",
+      "command": "python",
+      "args": ["/mnt/d/FTE_Employee/hackathon_zero/src/mcp_servers/social_mcp.py"],
+      "env": {
+        "LINKEDIN_API_KEY": "",
+        "WHATSAPP_SESSION": "/mnt/d/FTE_Employee/hackathon_zero/src/watchers/whatsapp_session"
+      }
+    },
+    {
+      "name": "browser",
+      "command": "python",
+      "args": ["/mnt/d/FTE_Employee/hackathon_zero/src/mcp_servers/browser_mcp.py"],
+      "env": {
+        "HEADLESS": "true"
+      }
+    }
+  ]
+}

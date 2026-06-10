@@ -1,0 +1,27 @@
+[
+  {
+    "domain": "@gmail.com",
+    "server": "smtp.gmail.com",
+    "port": 587
+  },
+  {
+    "domain": "@outlook.com",
+    "server": "smtp.office365.com",
+    "port": 587
+  },
+  {
+    "domain": "@yahoo.com",
+    "server": "smtp.mail.yahoo.com",
+    "port": 587
+  },
+  {
+    "domain": "@qq.com",
+    "server": "smtp.qq.com",
+    "port": 587
+  },
+  {
+    "domain": "@126.com",
+    "server": "smtp.126.com",
+    "port": 25
+  }
+]

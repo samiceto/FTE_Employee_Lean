@@ -1,0 +1,28 @@
+{
+  "name": "odoo-accounting",
+  "version": "1.0.0",
+  "description": "Odoo Community Edition Accounting Integration via XML-RPC",
+  "server": {
+    "url": "http://localhost:8069",
+    "database": "odoo",
+    "username": "admin",
+    "password": "admin"
+  },
+  "tools": [
+    "odoo_create_invoice",
+    "odoo_record_expense",
+    "odoo_get_accounts_receivable",
+    "odoo_get_financial_summary"
+  ],
+  "features": {
+    "invoice_management": true,
+    "expense_tracking": true,
+    "financial_reporting": true,
+    "partner_management": true
+  },
+  "notes": [
+    "Ensure Odoo Accounting module is installed",
+    "Chart of Accounts must be configured",
+    "Default credentials can be changed in environment variables"
+  ]
+}
