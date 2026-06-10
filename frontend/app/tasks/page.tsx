@@ -26,8 +26,7 @@ const priorityColor = {
 };
 
 const platformColor: Record<string, string> = {
-  gmail: 'blue', linkedin: 'blue', instagram: 'purple',
-  x: 'gray', facebook: 'blue', whatsapp: 'green', odoo: 'yellow', slack: 'orange',
+  gmail: 'blue', whatsapp: 'green', odoo: 'yellow', slack: 'orange',
 };
 
 const STAGES = ['pending', 'in_progress', 'approved', 'done', 'rejected'] as const;

@@ -102,7 +102,6 @@ export default function DashboardPage() {
               {[
                 { name: 'Groq AI', icon: Zap, status: 'green', label: 'Active' },
                 { name: 'Gmail', icon: Mail, status: 'green', label: 'Polling' },
-                { name: 'LinkedIn', icon: Share2, status: 'green', label: 'Active' },
                 { name: 'WhatsApp', icon: Share2, status: 'red', label: 'Disconnected' },
                 { name: 'Odoo', icon: Database, status: 'green', label: 'Connected' },
                 { name: 'Slack', icon: BarChart3, status: 'green', label: 'Active' },

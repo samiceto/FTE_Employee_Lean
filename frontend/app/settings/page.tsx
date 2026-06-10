@@ -48,7 +48,6 @@ export default function SettingsPage() {
     notifyOnSuccess: false,
     weeklyBriefing: true,
     emailEnabled: true,
-    socialEnabled: true,
     accountingEnabled: true,
     debugMode: false,
     retryOnFail: true,
@@ -138,7 +137,6 @@ export default function SettingsPage() {
         </h2>
         <div className="space-y-4">
           <Toggle checked={config.emailEnabled} onChange={v => update('emailEnabled', v)} label="Email Integration" description="Enable Gmail watcher and email drafting" />
-          <Toggle checked={config.socialEnabled} onChange={v => update('socialEnabled', v)} label="Social Media Integration" description="Enable all social media watchers" />
           <Toggle checked={config.accountingEnabled} onChange={v => update('accountingEnabled', v)} label="Accounting Integration" description="Enable Odoo invoice and expense creation" />
           <Toggle checked={config.autoApprove} onChange={v => update('autoApprove', v)} label="Auto-Approve Drafts" description="Automatically approve AI-generated drafts without review" />
         </div>

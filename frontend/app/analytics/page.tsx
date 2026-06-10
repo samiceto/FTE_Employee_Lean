@@ -46,7 +46,7 @@ export default function AnalyticsPage() {
         {[
           { label: 'Tasks Processed', value: '84', change: '+12%', icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
           { label: 'Emails Handled', value: '26', change: '+5%', icon: Activity, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
-          { label: 'Posts Published', value: '21', change: '+8%', icon: TrendingUp, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
+          { label: 'Invoices Created', value: '7', change: '+8%', icon: DollarSign, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
           { label: 'Time Saved (est.)', value: '41h', change: 'this week', icon: Clock, color: 'text-yellow-400', bg: 'bg-yellow-500/10 border-yellow-500/20' },
         ].map(({ label, value, change, icon: Icon, color, bg }) => (
           <Card key={label} className={`p-5 border ${bg}`}>
@@ -73,23 +73,22 @@ export default function AnalyticsPage() {
           </div>
         </Card>
 
-        {/* Platform breakdown */}
+        {/* Channel breakdown */}
         <Card className="p-5">
           <h2 className="text-sm font-semibold text-slate-200 flex items-center gap-2 mb-4">
-            <Users size={14} className="text-blue-400" /> Platform Breakdown
+            <Users size={14} className="text-blue-400" /> Work by Channel
           </h2>
           <div className="space-y-3">
             {[
-              { label: 'LinkedIn', posts: 4, pct: 67, color: 'bg-blue-500' },
-              { label: 'X / Twitter', posts: 11, pct: 100, color: 'bg-slate-400' },
-              { label: 'Instagram', posts: 2, pct: 33, color: 'bg-pink-500' },
-              { label: 'Facebook', posts: 0, pct: 0, color: 'bg-blue-300' },
-              { label: 'Email', posts: 26, pct: 85, color: 'bg-emerald-500' },
-            ].map(({ label, posts, pct, color }) => (
+              { label: 'Email', count: 26, pct: 85, color: 'bg-emerald-500' },
+              { label: 'Accounting (Odoo)', count: 15, pct: 60, color: 'bg-yellow-500' },
+              { label: 'WhatsApp', count: 9, pct: 35, color: 'bg-green-500' },
+              { label: 'Task Plans', count: 12, pct: 48, color: 'bg-blue-500' },
+            ].map(({ label, count, pct, color }) => (
               <div key={label}>
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="text-slate-300">{label}</span>
-                  <span className="text-slate-500">{posts} posts</span>
+                  <span className="text-slate-500">{count} items</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-slate-700 overflow-hidden">
                   <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${pct}%` }} />
