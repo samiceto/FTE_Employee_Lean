@@ -1,501 +1,177 @@
-# FTE_Employee - AI Employee Automation System
+# FTE_Employee (Lean) — AI Back-Office Assistant
 
-**Silver Tier Compliant** - Modular skill-based AI agent using FREE Groq API
+A modular, skill-based AI assistant that handles back-office work: it triages and drafts
+email replies, keeps your books in Odoo, reasons over pending tasks to produce action plans,
+and generates business analytics — all surfaced through a Next.js dashboard.
+
+> **This is the "lean" build.** Social-media browser automation (LinkedIn / X / Instagram /
+> Facebook) has been removed in favour of the deployable, API-based core. See
+> [`FTE_Employee`](https://github.com/samiceto/FTE_Employee) for the full original version.
 
 ---
 
-## Overview
+## What it does
 
-FTE_Employee is an automated AI employee system that monitors multiple communication channels (Gmail, LinkedIn, Instagram, X/Twitter, WhatsApp), analyzes pending tasks, and generates actionable plans using AI reasoning.
+| Capability | How |
+|------------|-----|
+| 📧 **Email triage & reply** | Reads Gmail (official API), classifies messages, drafts replies; sends via the email MCP server. |
+| 💬 **WhatsApp monitoring** | Watches WhatsApp Web for keyword-matched messages and files them for action. |
+| 💰 **Accounting** | Creates invoices, records expenses, and reports AR/financials in Odoo via XML-RPC. |
+| 🧠 **Task reasoning** | Collects pending tasks, decomposes them, and generates prioritized action plans with Groq (Llama 3.3 70B). |
+| 📊 **Business analytics** | CEO briefings, bottleneck analysis, subscription audits, and log analysis. |
+| 🖥️ **Dashboard** | Next.js 16 UI to review tasks, approvals, email, analytics, logs, and settings. |
 
-**Key Features:**
-- 🤖 **Modular Skills System** - Silver Tier compliant architecture
-- 💰 **$0/month Cost** - Uses FREE Groq API (Llama 3.3 70B)
-- 📧 **Multi-Channel Monitoring** - Gmail, LinkedIn, Instagram, X, WhatsApp
-- 📋 **Intelligent Planning** - AI-generated action plans with reasoning
-- 🔄 **Automated Workflows** - Continuous monitoring and task processing
-- 🧪 **Fully Tested** - Comprehensive test suite with pytest
+**Cost:** the reasoning layer runs on Groq's free tier ($0). Gmail and Odoo APIs are free.
 
 ---
 
 ## Architecture
 
-### Silver Tier Compliance
-
-This project has been refactored from monolithic code into **modular Python skills** for Silver Tier compliance. All AI functionality is implemented as discrete, reusable skill classes.
-
 ```
 hackathon_zero/
 ├── src/
-│   ├── skills/                    # Modular skill system (Silver Tier)
-│   │   ├── base_skill.py         # Base class with Groq integration
-│   │   ├── registry.py           # Skill discovery and registration
-│   │   ├── analysis/             # Analysis skills (no LLM)
-│   │   │   ├── task_analyzer.py
-│   │   │   └── context_loader.py
-│   │   ├── planning/             # Planning skills (uses Groq)
-│   │   │   └── plan_generator.py
-│   │   ├── content/              # Content skills (uses Groq)
-│   │   │   └── content_optimizer.py
-│   │   └── communication/        # Communication skills (uses Groq)
-│   │       └── email_classifier.py
+│   ├── skills/                     # Modular skill system
+│   │   ├── base_skill.py           # Base class + Groq integration
+│   │   ├── registry.py             # Skill discovery & registration
+│   │   ├── analysis/               # task_analyzer, context_loader
+│   │   ├── planning/               # plan_generator (Groq)
+│   │   ├── content/                # content_optimizer (Groq)
+│   │   ├── communication/          # email_classifier (Groq)
+│   │   ├── execution/              # task_decomposer/selector/executor, plan_adjuster, progress_evaluator
+│   │   ├── accounting/             # invoice_generator, expense_tracker, accounting_aggregator, odoo_connector
+│   │   └── analytics/              # ceo_briefing_generator, bottleneck_analyzer, subscription_auditor, log_analyzer, weekly_task_collector
 │   │
-│   ├── agents/
-│   │   └── reasoning_agent.py    # Orchestrates skills
-│   │
-│   ├── watchers/                 # Channel monitors
-│   │   ├── gmail_watcher.py      # Gmail monitoring
-│   │   ├── linkedin_watcher.py   # LinkedIn posting
-│   │   ├── insta_watcher.py      # Instagram posting
-│   │   ├── x_watcher.py          # X/Twitter posting
-│   │   └── whatsapp_watcher.py   # WhatsApp monitoring
-│   │
-│   └── orchestrator/
-│       └── reasoning_loop.py     # Main orchestration loop
+│   ├── agents/                     # Agent orchestration
+│   ├── watchers/                   # gmail_watcher, whatsapp_watcher, business_audit_watcher
+│   ├── mcp_servers/                # email + odoo MCP servers
+│   └── orchestrator/               # reasoning_loop (main loop)
 │
-├── tests/
-│   └── skills/                   # Skill tests
-│
-├── ai_employee_vault/            # Data storage
-│   ├── Need_Action/              # Pending tasks
-│   ├── Approved/                 # Approved content
-│   ├── Plans/                    # Generated plans
-│   ├── Done/                     # Completed items
-│   └── Logs/                     # Reasoning logs
-│
-├── SKILLS.md                     # Detailed skill documentation
-└── README.md                     # This file
+├── frontend/                       # Next.js 16 dashboard (currently mock data)
+├── ai_employee_vault/              # File-based workflow (structure only; data is git-ignored)
+├── cloud/                          # Docker Odoo stack (Postgres + Odoo + Nginx + certbot)
+├── ecosystem.config.js             # PM2 process definitions
+├── SETUP.md                        # Full clone-to-run instructions
+└── README.md                       # This file
 ```
 
 ---
 
-## Quick Start
+## Quick start
 
-### Prerequisites
-
-- Python 3.12+
-- Free Groq API key: https://console.groq.com/keys
-- Playwright (for watchers)
-
-### Installation
+> Full step-by-step instructions (env vars, Gmail OAuth, Odoo, etc.) are in **[SETUP.md](SETUP.md)**.
 
 ```bash
-# Clone the repository
-cd hackathon_zero
+# 1. Install
+uv sync                       # or: python -m venv .venv && pip install -e .
+playwright install chromium   # for the WhatsApp watcher
 
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# 2. Configure
+cp .env.example .env          # then fill in GROQ_API_KEY, email, and Odoo values
 
-# Install dependencies
-pip install -r requirements.txt
+# 3. Run the reasoning loop
+python -m src.orchestrator.reasoning_loop --once          # single pass
+python -m src.orchestrator.reasoning_loop --interval 1800 # every 30 min
 
-# Install Playwright browsers
-playwright install chromium
-```
-
-### Configuration
-
-1. Create `.env` file:
-```bash
-GROQ_API_KEY=your_groq_api_key_here
-VAULT_PATH=/mnt/d/FTE_Employee/hackathon_zero/ai_employee_vault
-```
-
-2. Set up vault structure:
-```bash
-mkdir -p ai_employee_vault/{Need_Action/{email_replies,business_tasks,social_posts,whatsapp},Approved/{linkedin,instagram,x},Plans,Done,Logs}
-```
-
-### Running the System
-
-#### 1. Start Reasoning Agent (Main Loop)
-
-```bash
-# Run once
-python -m src.orchestrator.reasoning_loop --once
-
-# Run continuously (checks every 30 minutes)
-python -m src.orchestrator.reasoning_loop --interval 1800
-```
-
-#### 2. Start Watchers
-
-```bash
-# Gmail watcher
+# 4. Run watchers
 python -m src.watchers.gmail_watcher
-
-# LinkedIn poster
-python -m src.watchers.linkedin_watcher
-
-# Instagram poster
-python -m src.watchers.insta_watcher
-
-# X/Twitter poster
-python -m src.watchers.x_watcher
-
-# WhatsApp monitor
 python -m src.watchers.whatsapp_watcher
+
+# 5. Dashboard
+cd frontend && npm install && npm run dev   # http://localhost:3000
+```
+
+Or start everything with PM2:
+
+```bash
+pm2 start ecosystem.config.js   # edit the absolute paths inside first
 ```
 
 ---
 
-## Skills System
+## The vault workflow
 
-The project uses a **modular skill system** for Silver Tier compliance. See [SKILLS.md](SKILLS.md) for complete documentation.
+`ai_employee_vault/` is a file-based pipeline. The repo ships the empty folder structure;
+real data is generated at runtime and git-ignored.
 
-### Available Skills
+| Folder | Purpose |
+|--------|---------|
+| `Inbox/` | Raw incoming items (gmail, whatsapp) |
+| `Need_Action/` | Tasks awaiting reasoning |
+| `Pending_Approval/` | AI drafts awaiting your approval |
+| `Approved/` | Approved items ready to act on |
+| `Done/` | Completed items |
+| `Plans/` | AI-generated action plans |
+| `Accounting/` | Invoices, expenses, financial summaries |
+| `Briefings/` | CEO briefings & analytics reports |
+| `Logs/` | Reasoning + audit logs |
 
-| Skill | Category | Uses AI | Description |
-|-------|----------|---------|-------------|
-| **TaskAnalyzer** | Analysis | ❌ No | Collect and parse tasks from Need_Action |
-| **ContextLoader** | Analysis | ❌ No | Load business goals and handbook |
-| **PlanGenerator** | Planning | ✅ Groq | Generate action plans with AI reasoning |
-| **ContentOptimizer** | Content | ✅ Groq | Optimize social media posts |
-| **EmailClassifier** | Communication | ✅ Groq | Classify and analyze emails |
+**Flow:** watchers drop items in `Inbox`/`Need_Action` → the reasoning loop analyzes them and
+writes a plan → drafts land in `Pending_Approval` → you approve → results move to `Done`.
 
-### Using Skills
+---
+
+## Skills
+
+The system is built from discrete, auto-discovered skill classes. Add one by dropping a file
+into the right `src/skills/<category>/` folder:
 
 ```python
-from skills import get_registry, SkillInput
+from ..base_skill import BaseSkill, SkillInput, SkillOutput
 
-# Get global registry
-registry = get_registry()
+class MySkill(BaseSkill):
+    SKILL_NAME = "my_skill"
+    REQUIRES_LLM = False        # True to use Groq
+    DESCRIPTION = "What this skill does"
 
-# Auto-discover all skills
-from pathlib import Path
-registry.auto_discover(Path("src/skills"))
-
-# Use a skill
-task_analyzer = registry.get_skill("task_analyzer", vault_path="/path/to/vault")
-result = task_analyzer.execute(SkillInput(data={"max_tasks": 20}))
-
-tasks = result.result  # List of TaskItem objects
+    def execute(self, input_data: SkillInput) -> SkillOutput:
+        return SkillOutput(result="data", success=True)
 ```
 
----
-
-## Workflow
-
-### 1. Task Collection
-
-Watchers monitor channels and create task files in `Need_Action/`:
-
-```
-Need_Action/
-├── email_replies/
-│   └── urgent_client_email.md
-├── business_tasks/
-│   └── invoice_reminder.md
-├── social_posts/
-│   └── linkedin_post.md
-└── whatsapp/
-    └── msg_1234567890.txt
-```
-
-### 2. AI Reasoning
-
-Every 30 minutes, the reasoning loop:
-
-1. **TaskAnalyzer** collects pending tasks
-2. **ContextLoader** loads business context
-3. **PlanGenerator** uses Groq to create Plan.md
-
-Example Plan.md:
-```markdown
----
-title: "Client Communication and Invoice Management"
-created: 2026-01-18T14:30:22
-complexity: moderate
-status: pending
-model: llama-3.3-70b-versatile
----
-
-# Client Communication and Invoice Management
-
-## Summary
-Address urgent client email regarding project timeline and send
-outstanding invoice reminder to ensure payment within deadline.
-
-## Reasoning
-The urgent client email requires immediate attention due to project
-deadline implications...
-
-## Action Steps
-
-### Step 1: Reply to urgent client email
-- **Assignee:** 🤝 hybrid
-- **Effort:** medium
-- **Related Tasks:** urgent_client_email.md
-
-Draft professional response addressing timeline concerns...
-
-### Step 2: Send invoice reminder
-- **Assignee:** 🤖 automated
-- **Effort:** low
-- **Related Tasks:** invoice_reminder.md
-
-Use automated email template for outstanding invoice...
-
-## Risks
-- ⚠️ Client may push back on timeline
-- ⚠️ Invoice payment may be delayed
-
-## Success Criteria
-- ✅ Client email replied within 2 hours
-- ✅ Invoice reminder sent
-- ✅ Updated project timeline documented
-```
-
-### 3. Action Execution
-
-Approved content in `Approved/` is automatically posted by watchers:
-
-```
-Approved/
-├── linkedin/
-│   └── post_about_project.md
-├── instagram/
-│   └── behind_the_scenes.md
-└── x/
-    └── quick_tip.md
-```
-
-Watchers post content and move files to `Done/`.
+The `SkillRegistry` auto-discovers it — no registration needed.
 
 ---
 
 ## Testing
 
 ```bash
-# Run all tests
-pytest
-
-# Run skill tests specifically
-pytest tests/skills/ -v
-
-# Run with coverage
-pytest --cov=src/skills tests/skills/
-
-# Run specific test
-pytest tests/skills/test_task_analyzer.py::test_task_analyzer_with_tasks
+pytest                      # all tests
+pytest tests/skills/ -v     # skill tests
 ```
 
 ---
 
-## Cost Breakdown
+## Dashboard status
 
-| Component | Service | Cost |
-|-----------|---------|------|
-| AI Reasoning (5 skills) | Groq API | **$0** (Free tier) |
-| Task Analysis | Local Python | $0 |
-| Watchers (5 channels) | Playwright | $0 |
-| **Total** | | **$0/month** |
+The Next.js dashboard currently renders from `frontend/lib/mock-data.ts` (placeholder data);
+it is not yet wired to the live vault/backend. Wiring the **Approvals** and **Tasks** pages to
+real vault data is the natural next step.
 
 ---
 
-## Configuration Options
+## Cloud (optional)
 
-### Reasoning Agent
+`cloud/docker-compose.yml` stands up Odoo + PostgreSQL + Nginx (HTTPS via Let's Encrypt) on a
+small VM:
 
 ```bash
-python -m src.orchestrator.reasoning_loop \
-  --vault /path/to/vault \
-  --interval 1800 \           # Check interval (seconds)
-  --min-tasks 1 \             # Minimum tasks before running
-  --cooldown 60 \             # Cooldown after plan (minutes)
-  --model llama-3.3-70b-versatile \
-  --verbose
-```
-
-### Watchers
-
-Each watcher supports:
-- Custom vault paths
-- Check intervals
-- Session persistence
-- Error logging
-
----
-
-## Development
-
-### Adding a New Skill
-
-1. Create skill file in appropriate category:
-
-```python
-# src/skills/analysis/my_skill.py
-from ..base_skill import BaseSkill, SkillInput, SkillOutput
-
-class MySkill(BaseSkill):
-    SKILL_NAME = "my_skill"
-    REQUIRES_LLM = False  # or True for Groq
-    DESCRIPTION = "What this skill does"
-
-    def execute(self, input_data: SkillInput) -> SkillOutput:
-        # Implementation
-        return SkillOutput(result="data", success=True)
-```
-
-2. Add tests:
-
-```python
-# tests/skills/test_my_skill.py
-def test_my_skill():
-    skill = MySkill(vault_path="/tmp/test")
-    result = skill.execute(SkillInput(data={}))
-    assert result.success == True
-```
-
-3. Skill is auto-discovered by registry!
-
-### Project Structure
-
-- `src/skills/` - Modular skill classes
-- `src/agents/` - Agent orchestration
-- `src/watchers/` - Channel monitors
-- `src/orchestrator/` - Main loop
-- `tests/` - Test suite
-- `ai_employee_vault/` - Data storage
-
----
-
-## Troubleshooting
-
-### Groq API Key Not Found
-
-```
-ValueError: GROQ_API_KEY not found
-```
-
-**Solution:** Add to `.env`:
-```bash
-GROQ_API_KEY=your_key_here
-```
-
-Get free key: https://console.groq.com/keys
-
-### Skill Not Found
-
-```
-KeyError: Skill 'task_analyzer' not found
-```
-
-**Solution:** Ensure auto-discovery ran:
-```python
-registry.auto_discover(Path("src/skills"))
-```
-
-### Playwright Browser Not Installed
-
-```
-Error: Executable doesn't exist at /path/to/chromium
-```
-
-**Solution:**
-```bash
-playwright install chromium
+cd cloud
+cp ../.env.cloud.example .env   # fill in real values
+docker compose up -d
+./certbot-init.sh               # after DNS points at the VM
 ```
 
 ---
 
-## Monitoring
+## Notes & roadmap
 
-### Check Logs
-
-```bash
-# Reasoning logs
-cat ai_employee_vault/Logs/reasoning_*.md
-
-# Watcher logs (console output)
-```
-
-### View Generated Plans
-
-```bash
-ls -la ai_employee_vault/Plans/
-```
-
-### Check Task Queue
-
-```bash
-find ai_employee_vault/Need_Action -name "*.md" -type f
-```
-
----
-
-## Silver Tier Compliance
-
-✅ **All AI functionality implemented as Agent Skills**
-
-- **Modular:** Each skill is a separate Python class
-- **Discoverable:** Auto-discovered via SkillRegistry
-- **Reusable:** Skills can be used independently
-- **Testable:** Unit tests for each skill
-- **Extensible:** Easy to add new skills
-- **Cost-effective:** $0/month using FREE Groq API
-
-**Before:** 456-line monolithic reasoning_agent.py
-**After:** 5 modular skills + 143-line orchestrator
-
----
-
-## Features
-
-### Current Features
-
-- ✅ Multi-channel monitoring (Gmail, LinkedIn, Instagram, X, WhatsApp)
-- ✅ AI-powered plan generation
-- ✅ Automated content posting
-- ✅ Email classification and triage
-- ✅ Content optimization for social media
-- ✅ Modular skill system
-- ✅ Comprehensive testing
-- ✅ $0/month cost
-
-### Roadmap
-
-- 🔲 Web dashboard for monitoring
-- 🔲 More intelligence skills (sentiment analysis, meeting scheduling)
-- 🔲 Slack integration
-- 🔲 Calendar integration
-- 🔲 Advanced analytics
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Add your skill or feature
-4. Write tests
-5. Submit a pull request
-
-See [SKILLS.md](SKILLS.md) for skill development guidelines.
+- **WhatsApp** still uses browser automation (Playwright) and requires a one-time QR scan;
+  sessions are stored locally and git-ignored.
+- Removed social posting can be reintroduced later via **official APIs** (Meta Graph for
+  Instagram/Facebook, X API, LinkedIn Marketing API) rather than browser automation.
+- Planned: wire the dashboard to the real backend; add a small API layer over the vault.
 
 ---
 
 ## License
 
-MIT License - See LICENSE file
-
----
-
-## Support
-
-- 📖 Documentation: [SKILLS.md](SKILLS.md)
-- 🐛 Issues: GitHub Issues
-- 💬 Discussions: GitHub Discussions
-
----
-
-## Acknowledgments
-
-- **Groq** - FREE ultra-fast inference API
-- **Playwright** - Browser automation
-- **Python Community** - Amazing libraries
-
----
-
-**Built for Silver Tier compliance with $0/month cost using FREE Groq API.**
+MIT
