@@ -12,7 +12,7 @@ import { ScrollText, Search, Filter, CheckCircle, XCircle, Download, RefreshCw }
 const extraLogs: AuditLog[] = [
   { id: '9', timestamp: '2026-05-01T10:22:00Z', event_type: 'plan.executed', component: 'ReasoningAgent', message: 'Generated Plan_20260501_102200.md with 5 tasks (priority: high)', success: true },
   { id: '10', timestamp: '2026-05-01T10:18:30Z', event_type: 'email.sent', component: 'EmailMCP', message: 'Reply delivered to vendor@supplier.com — invoice query', success: true },
-  { id: '11', timestamp: '2026-05-01T10:15:00Z', event_type: 'task.failed', component: 'WhatsAppWatcher', message: 'Playwright session timeout — WhatsApp disconnected', success: false },
+  { id: '11', timestamp: '2026-05-01T10:15:00Z', event_type: 'invoice.created', component: 'OdooConnector', message: 'Invoice INV/2026/002 created — Beta LLC $3,200', success: true },
   { id: '12', timestamp: '2026-05-01T10:10:45Z', event_type: 'expense.created', component: 'OdooConnector', message: 'Expense recorded: Cloud Services March — $180', success: true },
   { id: '13', timestamp: '2026-05-01T10:05:22Z', event_type: 'email.classified', component: 'EmailClassifier', message: 'Email from client@acmecorp.com classified as URGENT', success: true },
   { id: '14', timestamp: '2026-05-01T09:58:10Z', event_type: 'agent.started', component: 'ExecutionAgent', message: 'Ralph Wiggum Loop started — interval: 5m', success: true },

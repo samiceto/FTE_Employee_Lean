@@ -11,7 +11,7 @@ Responsibilities:
 
 Security:
   • Has access to all credentials (.env)
-  • WhatsApp sessions, payment tokens, banking creds stay local
+  • Payment tokens, banking creds, and local secrets stay local
   • Cloud never touches these
 """
 import os

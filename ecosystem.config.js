@@ -42,15 +42,6 @@ module.exports = {
       max_restarts: 10,
       cwd: '/mnt/d/FTE_Employee/hackathon_zero'
     },
-    {
-      name: 'whatsapp-watcher',
-      script: '/mnt/d/FTE_Employee/hackathon_zero/src/watchers/whatsapp_watcher.py',
-      interpreter: '/mnt/d/FTE_Employee/hackathon_zero/.venv/bin/python',
-      watch: false,
-      autorestart: true,
-      max_restarts: 10,
-      cwd: '/mnt/d/FTE_Employee/hackathon_zero/src/watchers'
-    },
     // Groq-powered AI reasoning loop - analyzes tasks and creates action plans
     // Runs every 30 minutes (1800s) with 60min cooldown
     // FREE ultra-fast inference with Llama 3.3 70B

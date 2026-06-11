@@ -7,7 +7,7 @@ import StatusDot from '../components/ui/StatusDot';
 import {
   Bot, Cpu, ListTodo, CheckCircle, AlertTriangle,
   TrendingUp, Activity, Clock, ArrowRight, Zap,
-  Mail, Share2, Database, BarChart3,
+  Mail, Database, BarChart3,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -102,7 +102,6 @@ export default function DashboardPage() {
               {[
                 { name: 'Groq AI', icon: Zap, status: 'green', label: 'Active' },
                 { name: 'Gmail', icon: Mail, status: 'green', label: 'Polling' },
-                { name: 'WhatsApp', icon: Share2, status: 'red', label: 'Disconnected' },
                 { name: 'Odoo', icon: Database, status: 'green', label: 'Connected' },
                 { name: 'Slack', icon: BarChart3, status: 'green', label: 'Active' },
               ].map(({ name, icon: Icon, status, label }) => (
@@ -173,7 +172,7 @@ export default function DashboardPage() {
             <AlertTriangle size={18} className="text-red-400 shrink-0" />
             <div className="flex-1">
               <p className="text-sm font-medium text-red-300">Action Required</p>
-              <p className="text-xs text-slate-500 mt-0.5">WhatsApp Watcher is disconnected — session expired. Re-scan QR code to restore.</p>
+              <p className="text-xs text-slate-500 mt-0.5">{errors} agent{errors > 1 ? 's' : ''} reported errors — check the Agents page to investigate.</p>
             </div>
             <Link href="/agents">
               <button className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 cursor-pointer whitespace-nowrap transition-colors">

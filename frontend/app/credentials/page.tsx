@@ -8,12 +8,11 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Modal from '../../components/ui/Modal';
-import { KeyRound, Eye, EyeOff, Plus, Search, Edit2, Check, AlertCircle, Bot, Mail, Share2, DollarSign, Bell, Settings } from 'lucide-react';
+import { KeyRound, Eye, EyeOff, Plus, Search, Edit2, Check, AlertCircle, Bot, Mail, DollarSign, Bell, Settings } from 'lucide-react';
 
 const categoryConfig = {
   ai: { label: 'AI / LLM', icon: Bot, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
   email: { label: 'Email', icon: Mail, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
-  messaging: { label: 'Messaging', icon: Share2, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
   accounting: { label: 'Accounting', icon: DollarSign, color: 'text-yellow-400', bg: 'bg-yellow-500/10 border-yellow-500/20' },
   notifications: { label: 'Notifications', icon: Bell, color: 'text-orange-400', bg: 'bg-orange-500/10 border-orange-500/20' },
   other: { label: 'Other', icon: Settings, color: 'text-slate-400', bg: 'bg-slate-500/10 border-slate-500/20' },

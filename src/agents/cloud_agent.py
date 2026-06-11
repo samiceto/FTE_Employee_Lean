@@ -8,7 +8,7 @@ Responsibilities (DRAFT-ONLY - never executes final actions):
   • Claim-by-move: moves tasks to In_Progress/cloud/ before processing
   • Status reporting: writes updates to Updates/cloud/
 
-Security: Never stores or uses WhatsApp sessions, payment creds, banking tokens.
+Security: Never stores or uses payment creds, banking tokens, or local secrets.
 All output is draft markdown - Local Agent approves and executes.
 """
 import os

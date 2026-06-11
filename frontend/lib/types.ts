@@ -2,7 +2,7 @@ export type AgentStatus = 'running' | 'stopped' | 'error' | 'idle';
 export type ProcessStatus = 'online' | 'stopped' | 'errored' | 'launching';
 export type TaskStatus = 'pending' | 'in_progress' | 'approved' | 'rejected' | 'done';
 export type Priority = 'critical' | 'high' | 'medium' | 'low';
-export type Platform = 'whatsapp' | 'gmail' | 'odoo' | 'slack';
+export type Platform = 'gmail' | 'odoo' | 'slack';
 
 export interface Agent {
   id: string;
@@ -47,7 +47,7 @@ export interface Task {
 export interface Credential {
   id: string;
   service: string;
-  category: 'ai' | 'email' | 'messaging' | 'accounting' | 'notifications' | 'other';
+  category: 'ai' | 'email' | 'accounting' | 'notifications' | 'other';
   keyName: string;
   value: string;
   isSet: boolean;

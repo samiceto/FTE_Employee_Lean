@@ -107,7 +107,7 @@ class TaskAnalyzer(BaseSkill):
             tasks.append(self._parse_markdown_file(file_path))
 
         # Collect from subfolders
-        for subfolder in ["email_replies", "business_tasks", "social_posts", "whatsapp"]:
+        for subfolder in ["email_replies", "business_tasks"]:
             subfolder_path = needs_action / subfolder
             if subfolder_path.exists():
                 for file_path in subfolder_path.glob("*.md"):

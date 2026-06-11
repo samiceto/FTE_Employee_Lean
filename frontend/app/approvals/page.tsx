@@ -35,7 +35,7 @@ export default function ApprovalsPage() {
   };
 
   const platformColors: Record<string, string> = {
-    gmail: 'blue', odoo: 'yellow', whatsapp: 'green', slack: 'orange',
+    gmail: 'blue', odoo: 'yellow', slack: 'orange',
   };
 
   const approved = tasks.filter(t => t.status === 'done').length;

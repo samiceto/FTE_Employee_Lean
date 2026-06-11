@@ -82,8 +82,8 @@ export default function AnalyticsPage() {
             {[
               { label: 'Email', count: 26, pct: 85, color: 'bg-emerald-500' },
               { label: 'Accounting (Odoo)', count: 15, pct: 60, color: 'bg-yellow-500' },
-              { label: 'WhatsApp', count: 9, pct: 35, color: 'bg-green-500' },
               { label: 'Task Plans', count: 12, pct: 48, color: 'bg-blue-500' },
+              { label: 'CEO Briefings', count: 4, pct: 20, color: 'bg-purple-500' },
             ].map(({ label, count, pct, color }) => (
               <div key={label}>
                 <div className="flex items-center justify-between text-xs mb-1">
