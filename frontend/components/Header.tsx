@@ -13,8 +13,8 @@ export default function Header({ onMenuClick }: { onMenuClick: () => void }) {
 
   return (
     <header
-      className="flex items-center justify-between h-16 px-6 border-b border-slate-800 shrink-0"
-      style={{ background: 'var(--bg-surface)' }}
+      className="flex items-center justify-between h-16 px-6 border-b border-slate-800/80 shrink-0 backdrop-blur-md"
+      style={{ background: 'rgba(15, 23, 42, 0.75)' }}
     >
       <div className="flex items-center gap-4">
         <button
@@ -52,8 +52,11 @@ export default function Header({ onMenuClick }: { onMenuClick: () => void }) {
         <div className="w-px h-6 bg-slate-700 mx-1" />
 
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
-            <span className="text-xs font-bold text-emerald-400">S</span>
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/20"
+            style={{ background: 'linear-gradient(135deg, #34D399, #0EA5E9)' }}
+          >
+            <span className="text-xs font-bold text-slate-950">S</span>
           </div>
           <div className="hidden sm:block">
             <p className="text-xs font-medium text-slate-200">Sami Ullah</p>

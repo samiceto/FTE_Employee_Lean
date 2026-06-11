@@ -11,23 +11,39 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-function StatCard({ icon: Icon, label, value, sub, color, href }: {
+function StatCard({ icon: Icon, label, value, sub, color, gradient, href, trend }: {
   icon: React.ElementType; label: string; value: string | number;
-  sub: string; color: string; href: string;
+  sub: string; color: string; gradient: string; href: string; trend: number[];
 }) {
+  const max = Math.max(...trend, 1);
   return (
     <Link href={href}>
-      <Card hover className="p-5 cursor-pointer group">
+      <Card hover className="relative p-5 cursor-pointer group overflow-hidden animate-rise">
+        <div
+          className="absolute -top-12 -right-12 w-32 h-32 rounded-full opacity-[0.07] group-hover:opacity-[0.14] transition-opacity duration-300 pointer-events-none"
+          style={{ background: gradient }}
+        />
         <div className="flex items-start justify-between">
           <div className={`p-2.5 rounded-lg border ${color}`}>
             <Icon size={18} />
           </div>
-          <ArrowRight size={14} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
+          <ArrowRight size={14} className="text-slate-600 group-hover:text-slate-300 group-hover:translate-x-0.5 transition-all" />
         </div>
-        <div className="mt-4">
-          <p className="text-2xl font-bold text-slate-100">{value}</p>
-          <p className="text-sm font-medium text-slate-300 mt-0.5">{label}</p>
-          <p className="text-xs text-slate-500 mt-1">{sub}</p>
+        <div className="mt-4 flex items-end justify-between gap-2">
+          <div>
+            <p className="text-3xl font-extrabold text-slate-100 tracking-tight">{value}</p>
+            <p className="text-sm font-medium text-slate-300 mt-0.5">{label}</p>
+            <p className="text-xs text-slate-500 mt-1">{sub}</p>
+          </div>
+          <div className="flex items-end gap-1 h-10 pb-1" aria-hidden="true">
+            {trend.map((v, i) => (
+              <div
+                key={i}
+                className="w-1.5 rounded-full opacity-50 group-hover:opacity-90 transition-opacity"
+                style={{ height: `${(v / max) * 100}%`, background: gradient, minHeight: '4px' }}
+              />
+            ))}
+          </div>
         </div>
       </Card>
     </Link>
@@ -43,16 +59,27 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-xl font-bold text-slate-100">System Overview</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Real-time status of your AI Employee automation system</p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight">
+            <span className="text-gradient">Your AI workforce is on duty</span>
+          </h1>
+          <p className="text-sm text-slate-400 mt-1">Real-time status of your AI Employee automation system</p>
+        </div>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-card">
+          <span className="relative flex w-2 h-2">
+            <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-40 animate-ping" />
+            <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
+          </span>
+          <span className="text-xs font-medium text-slate-300">Working 24/7 — no coffee breaks</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Bot} label="Active Agents" value={running} sub={`${errors} with errors`} color="bg-emerald-500/10 border-emerald-500/20 text-emerald-400" href="/agents" />
-        <StatCard icon={Cpu} label="Processes Online" value={onlineProcs} sub={`of ${mockProcesses.length} total`} color="bg-blue-500/10 border-blue-500/20 text-blue-400" href="/processes" />
-        <StatCard icon={ListTodo} label="Tasks Pending" value={pendingTasks} sub="awaiting processing" color="bg-yellow-500/10 border-yellow-500/20 text-yellow-400" href="/tasks" />
-        <StatCard icon={CheckCircle} label="Needs Approval" value={pendingApprovals} sub="drafts ready to review" color="bg-purple-500/10 border-purple-500/20 text-purple-400" href="/approvals" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger">
+        <StatCard icon={Bot} label="Active Agents" value={running} sub={`${errors} with errors`} color="bg-emerald-500/10 border-emerald-500/20 text-emerald-400" gradient="linear-gradient(135deg, #34D399, #0EA5E9)" trend={[3, 5, 4, 6, 5, 7, 6]} href="/agents" />
+        <StatCard icon={Cpu} label="Processes Online" value={onlineProcs} sub={`of ${mockProcesses.length} total`} color="bg-blue-500/10 border-blue-500/20 text-blue-400" gradient="linear-gradient(135deg, #38BDF8, #818CF8)" trend={[5, 6, 6, 7, 8, 8, 9]} href="/processes" />
+        <StatCard icon={ListTodo} label="Tasks Pending" value={pendingTasks} sub="awaiting processing" color="bg-yellow-500/10 border-yellow-500/20 text-yellow-400" gradient="linear-gradient(135deg, #FBBF24, #F97316)" trend={[8, 6, 7, 5, 6, 4, 5]} href="/tasks" />
+        <StatCard icon={CheckCircle} label="Needs Approval" value={pendingApprovals} sub="drafts ready to review" color="bg-purple-500/10 border-purple-500/20 text-purple-400" gradient="linear-gradient(135deg, #C084FC, #F472B6)" trend={[2, 3, 2, 4, 3, 5, 4]} href="/approvals" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
