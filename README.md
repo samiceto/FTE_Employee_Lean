@@ -15,7 +15,6 @@ and generates business analytics — all surfaced through a Next.js dashboard.
 | Capability | How |
 |------------|-----|
 | 📧 **Email triage & reply** | Reads Gmail (official API), classifies messages, drafts replies; sends via the email MCP server. |
-| 💬 **WhatsApp monitoring** | Watches WhatsApp Web for keyword-matched messages and files them for action. |
 | 💰 **Accounting** | Creates invoices, records expenses, and reports AR/financials in Odoo via XML-RPC. |
 | 🧠 **Task reasoning** | Collects pending tasks, decomposes them, and generates prioritized action plans with Groq (Llama 3.3 70B). |
 | 📊 **Business analytics** | CEO briefings, bottleneck analysis, subscription audits, and log analysis. |
@@ -42,7 +41,7 @@ hackathon_zero/
 │   │   └── analytics/              # ceo_briefing_generator, bottleneck_analyzer, subscription_auditor, log_analyzer, weekly_task_collector
 │   │
 │   ├── agents/                     # Agent orchestration
-│   ├── watchers/                   # gmail_watcher, whatsapp_watcher, business_audit_watcher
+│   ├── watchers/                   # gmail_watcher, business_audit_watcher
 │   ├── mcp_servers/                # email + odoo MCP servers
 │   └── orchestrator/               # reasoning_loop (main loop)
 │
@@ -63,7 +62,6 @@ hackathon_zero/
 ```bash
 # 1. Install
 uv sync                       # or: python -m venv .venv && pip install -e .
-playwright install chromium   # for the WhatsApp watcher
 
 # 2. Configure
 cp .env.example .env          # then fill in GROQ_API_KEY, email, and Odoo values
@@ -72,9 +70,8 @@ cp .env.example .env          # then fill in GROQ_API_KEY, email, and Odoo value
 python -m src.orchestrator.reasoning_loop --once          # single pass
 python -m src.orchestrator.reasoning_loop --interval 1800 # every 30 min
 
-# 4. Run watchers
+# 4. Run the Gmail watcher
 python -m src.watchers.gmail_watcher
-python -m src.watchers.whatsapp_watcher
 
 # 5. Dashboard
 cd frontend && npm install && npm run dev   # http://localhost:3000
@@ -95,7 +92,7 @@ real data is generated at runtime and git-ignored.
 
 | Folder | Purpose |
 |--------|---------|
-| `Inbox/` | Raw incoming items (gmail, whatsapp) |
+| `Inbox/` | Raw incoming items (gmail) |
 | `Need_Action/` | Tasks awaiting reasoning |
 | `Pending_Approval/` | AI drafts awaiting your approval |
 | `Approved/` | Approved items ready to act on |
@@ -164,10 +161,11 @@ docker compose up -d
 
 ## Notes & roadmap
 
-- **WhatsApp** still uses browser automation (Playwright) and requires a one-time QR scan;
-  sessions are stored locally and git-ignored.
-- Removed social posting can be reintroduced later via **official APIs** (Meta Graph for
-  Instagram/Facebook, X API, LinkedIn Marketing API) rather than browser automation.
+- **No browser automation.** Every integration uses an official API (Gmail, Odoo XML-RPC,
+  Groq, Slack) — nothing drives a headless browser, so there are no platform-ToS or
+  account-ban risks and it deploys cleanly to a normal server.
+- Messaging/social channels (WhatsApp, Instagram, Facebook, X, LinkedIn) were removed; any of
+  them could be reintroduced later via their **official APIs** rather than browser automation.
 - Planned: wire the dashboard to the real backend; add a small API layer over the vault.
 
 ---

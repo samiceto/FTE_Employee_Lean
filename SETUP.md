@@ -2,8 +2,8 @@
 
 This guide walks you through getting the project running from a fresh clone.
 
-> ⚠️ **Secrets are NOT in this repo.** All API keys, OAuth tokens, browser sessions, and
-> credentials are git-ignored. The placeholders below show you *what* to fill in. Replace
+> ⚠️ **Secrets are NOT in this repo.** All API keys, OAuth tokens, and credentials are
+> git-ignored. The placeholders below show you *what* to fill in. Replace
 > every `your_...` / `<...>` value with your real one. (If this is your own machine, keep
 > your real values in a local, git-ignored notes file — never commit them.)
 
@@ -27,9 +27,6 @@ cd FTE_Employee
 
 # create venv + install deps
 uv sync                 # or: python -m venv .venv && source .venv/bin/activate && pip install -e .
-
-# install the headless browser used by the watchers
-playwright install chromium
 ```
 
 ---
@@ -64,15 +61,7 @@ SLACK_BOT_TOKEN=xoxb-your-bot-token        # Slack app → OAuth & Permissions
 SLACK_APP_TOKEN=xapp-your-app-token        # Slack app → Basic Information → App-Level Tokens
 SLACK_TEAM_ID=your_team_id
 SLACK_DEFAULT_CHANNEL=your_channel_id
-
-# ---- LinkedIn watcher (only if you use browser posting) ----
-LINKEDIN_EMAIL=your_linkedin_email
-LINKEDIN_PASSWORD=your_linkedin_password
 ```
-
-> Note: `src/watchers/x_watcher.py` currently reads its env from a separate path
-> (`/mnt/d/FTE_Employee/shared/credentials/.env`). Either create that file too, or edit
-> the path at the top of `x_watcher.py` to point at this root `.env`.
 
 ---
 
@@ -103,27 +92,10 @@ The Gmail watcher needs an OAuth client + a token. Neither is in the repo.
 
 ---
 
-## 5. Log in the browser watchers (one-time, manual)
+## 5. Run the system
 
-The social watchers use persistent Playwright sessions stored in git-ignored folders
-(`src/watchers/*_user_data/`, `whatsapp_session/`). You log in once and the session is saved.
-
-1. Temporarily set `headless=False` in the watcher you're setting up (X & WhatsApp already are).
-2. Run it, e.g.:
-   ```bash
-   cd src/watchers
-   python whatsapp_watcher.py     # scan the WhatsApp QR code when the window opens
-   python x_watcher.py            # log into X when the window opens
-   ```
-3. The session persists for future runs (until the platform logs you out — WhatsApp needs
-   periodic re-scans).
-
-> ⚠️ Browser automation of LinkedIn / Instagram / WhatsApp may violate those platforms' Terms
-> of Service and risks account bans. Prefer official APIs where available.
-
----
-
-## 6. Run the system
+> **No browser logins needed.** This build uses only official APIs (Gmail, Odoo, Groq,
+> Slack) — there are no Playwright/browser watchers to set up.
 
 **Reasoning loop (the brain):**
 ```bash
@@ -131,13 +103,9 @@ python -m src.orchestrator.reasoning_loop --once          # single pass
 python -m src.orchestrator.reasoning_loop --interval 1800 # every 30 min
 ```
 
-**Individual watchers:**
+**Gmail watcher:**
 ```bash
 python -m src.watchers.gmail_watcher
-python -m src.watchers.linkedin_watcher
-python -m src.watchers.x_watcher
-python -m src.watchers.insta_watcher
-python -m src.watchers.whatsapp_watcher
 ```
 
 **All services via PM2 (optional):**
@@ -149,7 +117,7 @@ pm2 start ecosystem.config.js
 
 ---
 
-## 7. Run the dashboard (frontend)
+## 6. Run the dashboard (frontend)
 
 ```bash
 cd frontend
@@ -162,7 +130,7 @@ npm run dev        # http://localhost:3000
 
 ---
 
-## 8. (Optional) Cloud Odoo stack
+## 7. (Optional) Cloud Odoo stack
 
 ```bash
 cd cloud
@@ -173,17 +141,17 @@ docker compose up -d
 
 ---
 
-## 9. Vault structure
+## 8. Vault structure
 
 `ai_employee_vault/` is the file-based workflow. The repo ships the **empty folder structure**
 (via `.gitkeep`); real data is generated at runtime. Key folders:
 
 | Folder | Purpose |
 |--------|---------|
-| `Inbox/` | Raw incoming items (gmail, whatsapp, linkedin) |
+| `Inbox/` | Raw incoming items (gmail) |
 | `Need_Action/` | Tasks awaiting reasoning |
 | `Pending_Approval/` | AI drafts awaiting your approval |
-| `Approved/` | Approved content → watchers publish it |
+| `Approved/` | Approved items ready to act on |
 | `Done/` | Completed items |
 | `Plans/` | AI-generated action plans |
 | `Logs/` | Reasoning + audit logs |
@@ -197,7 +165,6 @@ docker compose up -d
 | `.env` | All secrets/config | §3 |
 | `src/watchers/gmail_credentials.json` | Gmail OAuth client | §4 |
 | `src/watchers/token.json` | Gmail OAuth token | §4 (`generate_token.py`) |
-| `src/watchers/*_user_data/`, `whatsapp_session/` | Browser sessions | §5 (manual login) |
 | `.venv/` | Python env | §2 (`uv sync`) |
 
 ---
@@ -207,7 +174,5 @@ docker compose up -d
 | Problem | Fix |
 |---------|-----|
 | `GROQ_API_KEY not found` | Add it to `.env` (§3). |
-| `Executable doesn't exist ... chromium` | `playwright install chromium`. |
 | Gmail auth fails | Re-run `generate_token.py`; check `gmail_credentials.json` exists. |
-| LinkedIn watcher can't log in | Set `LINKEDIN_EMAIL` / `LINKEDIN_PASSWORD` in `.env`. |
-| X watcher ignores `.env` | It reads a different path — see note in §3. |
+| Odoo connection fails | Verify `ODOO_URL`/`ODOO_DB`/`ODOO_USER`/`ODOO_PASSWORD` in `.env`. |
